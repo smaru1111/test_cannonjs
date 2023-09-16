@@ -1,4 +1,4 @@
-import { BoxProps, Physics, PlaneProps, useBox, usePlane } from "@react-three/cannon";
+import { Physics, PlaneProps, SphereProps, usePlane, useSphere } from "@react-three/cannon";
 import {
   OrbitControls,
   PerspectiveCamera,
@@ -6,7 +6,6 @@ import {
 import { Canvas } from "@react-three/fiber";
 import { useRef } from "react";
 import { Color, Mesh } from "three";
-import ChainScene from "../components/Chain";
 
 
 export default function Home() {
@@ -19,12 +18,12 @@ export default function Home() {
             position={[0, 100, 10]}
           ></PerspectiveCamera>
         </OrbitControls>
-        <Physics>
+        <Physics >
           <Plane />
-          <Cube />
+          <Sphere />
+          <ambientLight intensity={1}></ambientLight>
         </Physics>
       </Canvas>
-      <ChainScene/>
     </main>
   );
 }
@@ -32,7 +31,7 @@ export default function Home() {
 
 function Plane(props: PlaneProps) {
   const [ref] = usePlane(() => ({
-    rotation: [-Math.PI / 2, 0, 0],
+    rotation: [-Math.PI / 2, 0, 0], // 45度傾ける
       ...props 
     }),
     useRef<Mesh>(null))
@@ -43,9 +42,8 @@ function Plane(props: PlaneProps) {
   )
 }
 
-// Create a new component called 'Cube'
-function Cube(props: BoxProps) {
-  const [ref] = useBox(() => ({ 
+function Sphere(props: SphereProps) {
+  const [ref] = useSphere(() => ({ 
     mass: 100, 
     position: [0, 100, 0], 
     ...props }), 
@@ -53,8 +51,7 @@ function Cube(props: BoxProps) {
   // Return the mesh with a box geometry, and the reference
   return (
     <mesh ref={ref}>
-      <boxGeometry args={[1, 1, 1]} />
-      {/* 赤色にする */}
+      <sphereGeometry args={[1,30,30]} />
       <meshPhongMaterial color={new Color(0xff0000)} />
     </mesh>
   )
